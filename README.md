@@ -171,6 +171,14 @@ python3 npuzzle_astar.py <input_file>
 python3 npuzzle_astar.py <input_file> --show
 ```
 
+### Run in Evaluation Mode
+
+To compare Uniform Cost Search (UCS) and A* search with heuristic guidance, the program can be executed in evaluation mode:
+
+```bash
+python3 npuzzle_astar.py <input_file> --evaluation
+```
+>Note: In report, we tested on `eval_test.txt`
 ---
 
 ## 7. Design Decisions

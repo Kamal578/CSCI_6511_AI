@@ -214,3 +214,10 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Test input files
+test1.txt
+test2.txt
+
+# Latex
+*.tex
