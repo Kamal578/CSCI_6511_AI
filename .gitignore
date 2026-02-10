@@ -221,3 +221,6 @@ test2.txt
 
 # Latex
 *.tex
+
+# .DS_Store
+.DS_Store
