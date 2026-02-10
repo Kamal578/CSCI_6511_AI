@@ -165,6 +165,8 @@ Move sequence: LLURRULLUURRRDDRUULDDRUULDLLDLURRDRRDD
 python3 npuzzle_astar.py <input_file>
 ```
 
+The core logic now lives in the `npuzzle/` package (parsing, heuristics, search, CLI). `npuzzle_astar.py` is just a thin wrapper that calls the package entry point.
+
 ### Show Full Solution Path
 
 ```bash
@@ -181,7 +183,18 @@ python3 npuzzle_astar.py <input_file> --evaluation
 >Note: In report, we tested on `eval_test.txt`
 ---
 
-## 7. Design Decisions
+## 7. Running Tests
+
+The project uses the built-in `unittest` suite. From the repo root:
+
+```bash
+python3 -m unittest -q
+```
+
+This runs all tests in `test_npuzzle.py`, which exercise parsing, solvability checks, heuristics, neighbor generation, and A* search results.
+---
+
+## 8. Design Decisions
 
 * **Tuple-based board representation** for fast hashing
 * **Priority queue (heap)** for A* frontier
@@ -191,7 +204,7 @@ python3 npuzzle_astar.py <input_file> --evaluation
 
 ---
 
-## 8. Performance Notes
+## 9. Performance Notes
 
 * A* performs well for **3×3** and **4×4** puzzles
 * **5×5 and larger puzzles** may take significant time and memory

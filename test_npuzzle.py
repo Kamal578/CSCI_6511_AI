@@ -2,7 +2,7 @@ import unittest
 import tempfile
 import os
 
-from npuzzle_astar import (
+from npuzzle import (
     read_board,
     is_solvable,
     inversion_count,
@@ -12,7 +12,7 @@ from npuzzle_astar import (
     heuristic,
     neighbors,
     astar,
-    build_goal_positions
+    build_goal_positions,
 )
 
 
