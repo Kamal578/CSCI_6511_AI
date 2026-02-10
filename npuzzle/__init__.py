@@ -1,8 +1,10 @@
 """
-Public API for the n-puzzle solver package.
+API for the n-puzzle solver package.
 
 Re-export the main building blocks so callers can simply
 `from npuzzle import astar, read_board, heuristic, ...`.
+
+Author: Kamal Ahmadov, Omar Imamverdiyev
 """
 
 from .types import Move, Board

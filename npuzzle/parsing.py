@@ -10,6 +10,8 @@ Supports three instructor-provided formats:
 
 The parser validates that all tiles 0..n^2-1 appear exactly once and that
 `n` is between 3 and 8, raising ValueError otherwise.
+
+Author: Kamal Ahmadov, Omar Imamverdiyev
 """
 
 import re

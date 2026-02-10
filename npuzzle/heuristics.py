@@ -6,6 +6,8 @@ Admissible heuristic components for the n-puzzle.
 The solver uses Manhattan distance plus Linear Conflict. The sum remains
 admissible and consistent, giving optimality while pruning more nodes than
 Manhattan alone.
+
+Author: Kamal Ahmadov, Omar Imamverdiyev
 """
 
 from typing import List, Tuple

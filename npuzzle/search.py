@@ -6,6 +6,8 @@ A* search and neighbor generation for the n-puzzle.
 - `neighbors` yields all boards reachable by one blank move with its move label.
 - `astar` supports A* (default) or Uniform Cost Search when `use_heuristic=False`.
   Returns a dictionary of solution stats (moves, path, explored counts, runtime).
+
+Author: Kamal Ahmadov, Omar Imamverdiyev
 """
 
 import heapq
@@ -67,19 +69,12 @@ def astar(n: int, start: Board, use_heuristic: bool = True):
             - time: wall-clock seconds elapsed
     """
     goal = goal_board(n)
-    if start == goal:
-        return {
-            "moves": 0,
-            "path": [],
-            "boards": [start],
-            "expanded": 0,
-            "max_frontier": 0,
-            "time": 0.0,
-        }
+    trivial = _trivial_solution_if_goal(start, goal)
+    if trivial:
+        return trivial
 
     goal_pos = build_goal_positions(n)
 
-    # For path reconstruction
     parent: Dict[Board, Tuple[Optional[Board], Optional[Move]]] = {start: (None, None)}
     g_best: Dict[Board, int] = {start: 0}
 
@@ -96,8 +91,7 @@ def astar(n: int, start: Board, use_heuristic: bool = True):
         cur = heapq.heappop(pq)
         b = cur.board
 
-        # Skip stale PQ entries
-        if cur.g != g_best.get(b, 10**18):
+        if cur.g != g_best.get(b, 10**18):  # stale PQ entry
             continue
 
         expanded += 1
@@ -105,19 +99,7 @@ def astar(n: int, start: Board, use_heuristic: bool = True):
 
         if b == goal:
             elapsed = time.time() - start_time
-            # reconstruct
-            moves: List[Move] = []
-            boards: List[Board] = []
-            node: Optional[Board] = b
-            while node is not None:
-                boards.append(node)
-                p, mv = parent[node]
-                if mv is not None:
-                    moves.append(mv)
-                node = p
-            boards.reverse()
-            moves.reverse()
-
+            moves, boards = _reconstruct_path(b, parent)
             return {
                 "moves": cur.g,
                 "path": moves,
@@ -137,6 +119,36 @@ def astar(n: int, start: Board, use_heuristic: bool = True):
                 heapq.heappush(pq, PQItem(f=ng + nh, h=nh, g=ng, board=nb))
 
     raise RuntimeError("No solution found (this should not happen if solvable).")
+
+
+def _trivial_solution_if_goal(start: Board, goal: Board):
+    """Return the precomputed solution dictionary if the start is already solved."""
+    if start != goal:
+        return None
+    return {
+        "moves": 0,
+        "path": [],
+        "boards": [start],
+        "expanded": 0,
+        "max_frontier": 0,
+        "time": 0.0,
+    }
+
+
+def _reconstruct_path(goal_board_state: Board, parent: Dict[Board, Tuple[Optional[Board], Optional[Move]]]):
+    """Rebuild move list and board list from parent links."""
+    moves: List[Move] = []
+    boards: List[Board] = []
+    node: Optional[Board] = goal_board_state
+    while node is not None:
+        boards.append(node)
+        p, mv = parent[node]
+        if mv is not None:
+            moves.append(mv)
+        node = p
+    boards.reverse()
+    moves.reverse()
+    return moves, boards
 
 
 __all__ = ["neighbors", "PQItem", "astar"]

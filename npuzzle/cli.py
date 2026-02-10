@@ -6,6 +6,8 @@ Command-line entry points for running the n-puzzle solver.
 Provides:
 - `run_solver`: convenience wrapper used by the script and tests.
 - `main`: argparse-based CLI (`python3 npuzzle_astar.py <file> [--show|--evaluation]`).
+
+Author: Kamal Ahmadov, Omar Imamverdiyev
 """
 
 import argparse

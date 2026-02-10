@@ -7,6 +7,8 @@ Rules:
 - Odd n: puzzle solvable iff inversion count is even.
 - Even n: solvable iff (blank row from bottom is even AND inversions odd)
           OR (blank row from bottom is odd AND inversions even).
+
+Author: Kamal Ahmadov, Omar Imamverdiyev
 """
 
 from .types import Board

@@ -2,6 +2,8 @@ from __future__ import annotations
 
 """
 Goal-state helpers and human-readable board formatting.
+
+Author: Kamal Ahmadov, Omar Imamverdiyev
 """
 
 from .types import Board
