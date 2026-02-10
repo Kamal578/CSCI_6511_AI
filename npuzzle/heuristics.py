@@ -1,14 +1,23 @@
 from __future__ import annotations
 
+"""
+Admissible heuristic components for the n-puzzle.
+
+The solver uses Manhattan distance plus Linear Conflict. The sum remains
+admissible and consistent, giving optimality while pruning more nodes than
+Manhattan alone.
+"""
+
 from typing import List, Tuple
 
 from .types import Board
-from .state import goal_board
 
 
 def build_goal_positions(n: int) -> List[Tuple[int, int]]:
     """
-    goal_pos[val] = (row, col) for val in 0..n*n-1
+    Precompute goal coordinates for every tile value (0..n^2-1).
+
+    Returns a list where index = tile value, value = (row, col) in goal state.
     """
     pos = [(0, 0)] * (n * n)
     # 1..N
@@ -21,6 +30,11 @@ def build_goal_positions(n: int) -> List[Tuple[int, int]]:
 
 
 def manhattan(n: int, b: Board, goal_pos: List[Tuple[int, int]]) -> int:
+    """
+    Sum of vertical + horizontal distances from each tile to its goal spot.
+
+    Ignores the blank (0). Standard admissible heuristic for sliding puzzles.
+    """
     dist = 0
     for idx, val in enumerate(b):
         if val == 0:
@@ -33,12 +47,10 @@ def manhattan(n: int, b: Board, goal_pos: List[Tuple[int, int]]) -> int:
 
 def linear_conflict(n: int, b: Board, goal_pos: List[Tuple[int, int]]) -> int:
     """
-    Linear conflict heuristic component:
-    Adds 2 moves for each pair of tiles in the same row/col whose goal positions
-    are in that row/col but reversed relative order.
+    Extra cost for tiles in the correct row/col but reversed order (adds 2 per pair).
 
-    Total heuristic = Manhattan + linear_conflict
-    (still admissible)
+    Counts inversions among goal-aligned tiles in each row/column. Adds 2 moves per
+    conflict, preserving admissibility when combined with Manhattan.
     """
     conflict = 0
 
@@ -76,6 +88,7 @@ def linear_conflict(n: int, b: Board, goal_pos: List[Tuple[int, int]]) -> int:
 
 
 def heuristic(n: int, b: Board, goal_pos: List[Tuple[int, int]]) -> int:
+    """Admissible combined heuristic = Manhattan + Linear Conflict."""
     return manhattan(n, b, goal_pos) + linear_conflict(n, b, goal_pos)
 
 

@@ -1,5 +1,13 @@
 from __future__ import annotations
 
+"""
+Command-line entry points for running the n-puzzle solver.
+
+Provides:
+- `run_solver`: convenience wrapper used by the script and tests.
+- `main`: argparse-based CLI (`python3 npuzzle_astar.py <file> [--show|--evaluation]`).
+"""
+
 import argparse
 
 from .parsing import read_board
@@ -9,6 +17,14 @@ from .state import format_board
 
 
 def run_solver(file_path: str, show: bool = False, evaluation: bool = False) -> None:
+    """
+    Load a puzzle, report solvability, and print solution stats/paths.
+
+    Args:
+        file_path: input file containing the puzzle grid.
+        show: when True, prints every board on the solution path.
+        evaluation: when True, compares UCS (h=0) vs A* (heuristic) metrics.
+    """
     n, start = read_board(file_path)
 
     print(f"n = {n}")
@@ -61,6 +77,7 @@ def run_solver(file_path: str, show: bool = False, evaluation: bool = False) -> 
 
 
 def build_arg_parser() -> argparse.ArgumentParser:
+    """Argument parser shared by CLI entry points."""
     ap = argparse.ArgumentParser(description="Solve n-puzzle using A* (Manhattan + Linear Conflict).")
     ap.add_argument("file", help="Path to input file")
     ap.add_argument("--show", action="store_true", help="Print boards along the solution path.")
@@ -69,6 +86,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> None:
+    """CLI runner invoked by npuzzle_astar.py or `python -m npuzzle.cli`."""
     parser = build_arg_parser()
     args = parser.parse_args(argv)
     run_solver(args.file, show=args.show, evaluation=args.evaluation)

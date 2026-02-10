@@ -1,5 +1,13 @@
 from __future__ import annotations
 
+"""
+A* search and neighbor generation for the n-puzzle.
+
+- `neighbors` yields all boards reachable by one blank move with its move label.
+- `astar` supports A* (default) or Uniform Cost Search when `use_heuristic=False`.
+  Returns a dictionary of solution stats (moves, path, explored counts, runtime).
+"""
+
 import heapq
 import time
 from dataclasses import dataclass
@@ -11,6 +19,11 @@ from .state import goal_board
 
 
 def neighbors(n: int, b: Board) -> Iterable[Tuple[Board, Move]]:
+    """
+    Yield (next_board, move) pairs reachable by sliding the blank once.
+
+    The move label follows the direction the blank travels: U, D, L, R.
+    """
     z = b.index(0)
     zr, zc = divmod(z, n)
 
@@ -33,6 +46,7 @@ def neighbors(n: int, b: Board) -> Iterable[Tuple[Board, Move]]:
 
 @dataclass(order=True)
 class PQItem:
+    """Priority queue record ordered by f then h then g for tie-breaking."""
     f: int
     h: int
     g: int
@@ -40,6 +54,18 @@ class PQItem:
 
 
 def astar(n: int, start: Board, use_heuristic: bool = True):
+    """
+    Run A* (or UCS when `use_heuristic=False`) and return solution stats.
+
+    Returns:
+        dict with keys:
+            - moves: optimal path length
+            - path: list of move labels
+            - boards: list of boards along the path (start..goal)
+            - expanded: number of nodes expanded
+            - max_frontier: maximum PQ size observed
+            - time: wall-clock seconds elapsed
+    """
     goal = goal_board(n)
     if start == goal:
         return {

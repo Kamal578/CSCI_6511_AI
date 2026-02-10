@@ -1,14 +1,23 @@
 from __future__ import annotations
 
+"""
+Goal-state helpers and human-readable board formatting.
+"""
+
 from .types import Board
 
 
 def goal_board(n: int) -> Board:
-    # 1..N then 0
+    """Return the canonical goal board: tiles 1..(n^2-1) then 0 in the bottom-right."""
     return tuple(list(range(1, n * n)) + [0])
 
 
 def format_board(n: int, b: Board) -> str:
+    """
+    Pretty-print a board with right-aligned numbers and a blank placeholder.
+
+    Keeps uniform width based on the largest tile to preserve grid alignment.
+    """
     w = len(str(n * n - 1))
     out_lines = []
     for r in range(n):

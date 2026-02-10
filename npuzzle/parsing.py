@@ -1,5 +1,17 @@
 from __future__ import annotations
 
+"""
+Robust input parsing for n-puzzle instances.
+
+Supports three instructor-provided formats:
+1) Tab-delimited rows where an empty cell denotes the blank.
+2) Column-aligned space-separated rows with one missing column (implicit blank).
+3) Plain whitespace-separated rows requiring an explicit `0` for the blank.
+
+The parser validates that all tiles 0..n^2-1 appear exactly once and that
+`n` is between 3 and 8, raising ValueError otherwise.
+"""
+
 import re
 from typing import List, Tuple
 
@@ -7,6 +19,12 @@ from .types import Board
 
 
 def read_board(path: str) -> Tuple[int, Board]:
+    """
+    Load a board from file, returning (n, flattened board).
+
+    Raises:
+        ValueError: if the grid cannot be parsed or the tile set is invalid.
+    """
     with open(path, "r", encoding="utf-8") as f:
         raw_lines = [ln.rstrip("\n") for ln in f if ln.strip() != ""]
 

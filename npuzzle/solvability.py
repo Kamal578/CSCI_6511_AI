@@ -1,10 +1,19 @@
 from __future__ import annotations
 
+"""
+Solvability checks for the n-puzzle.
+
+Rules:
+- Odd n: puzzle solvable iff inversion count is even.
+- Even n: solvable iff (blank row from bottom is even AND inversions odd)
+          OR (blank row from bottom is odd AND inversions even).
+"""
+
 from .types import Board
 
 
 def inversion_count(seq: Board) -> int:
-    # Count inversions ignoring 0
+    """Count inversions in the board (ignoring the blank) using O(k^2) scan."""
     arr = [x for x in seq if x != 0]
     inv = 0
     for i in range(len(arr)):
@@ -16,6 +25,7 @@ def inversion_count(seq: Board) -> int:
 
 
 def is_solvable(n: int, b: Board) -> bool:
+    """Return True iff the board configuration is solvable for given n."""
     inv = inversion_count(list(b))
     if n % 2 == 1:
         # odd grid: solvable if inversions even
