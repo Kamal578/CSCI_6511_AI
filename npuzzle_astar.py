@@ -313,7 +313,14 @@ def astar(n: int, start: Board, use_heuristic: bool = True):
 
     goal = goal_board(n)
     if start == goal:
-        return 0, [], [start]
+        return {
+            "moves": 0,
+            "path": [],
+            "boards": [start],
+            "expanded": 0,
+            "max_frontier": 0,
+            "time": 0.0,
+        }
 
     goal_pos = build_goal_positions(n)
 
