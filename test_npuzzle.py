@@ -43,6 +43,14 @@ class TestNPuzzleParsing(unittest.TestCase):
 
         self.assertEqual(board, (1, 2, 3, 4, 5, 6, 7, 8, 0))
 
+    def test_duplicate_tile_raises(self):
+        # Duplicate 1 and missing 8 -> should raise
+        content = "1 1 2\n3 4 5\n6 7 0\n"
+        path = self._write_temp(content)
+        with self.assertRaises(ValueError):
+            read_board(path)
+        os.remove(path)
+
 
 class TestSolvability(unittest.TestCase):
 
@@ -56,6 +64,16 @@ class TestSolvability(unittest.TestCase):
 
         self.assertTrue(is_solvable(3, solvable))
         self.assertFalse(is_solvable(3, unsolvable))
+
+    def test_unsolvable_4x4_swapped_last_two(self):
+        # Standard 15-puzzle unsolvable configuration: swap 14 and 15.
+        start = (
+            1, 2, 3, 4,
+            5, 6, 7, 8,
+            9, 10, 11, 12,
+            13, 15, 14, 0,
+        )
+        self.assertFalse(is_solvable(4, start))
 
 
 class TestHeuristics(unittest.TestCase):
@@ -75,6 +93,14 @@ class TestHeuristics(unittest.TestCase):
         board = (1, 2, 3, 4, 5, 6, 0, 7, 8)
         h = heuristic(self.n, board, self.goal_pos)
         self.assertGreater(h, 0)
+
+    def test_linear_conflict_detects_reversal(self):
+        # Tiles 1 and 2 reversed in top row -> one conflict adds 2
+        board = (2, 1, 3,
+                 4, 5, 6,
+                 7, 8, 0)
+        lc = linear_conflict(self.n, board, self.goal_pos)
+        self.assertEqual(lc, 2)
 
 
 class TestNeighbors(unittest.TestCase):
@@ -97,6 +123,15 @@ class TestNeighbors(unittest.TestCase):
 
         moves = list(neighbors(n, board))
         self.assertEqual(len(moves), 2)
+
+    def test_neighbors_right_edge(self):
+        n = 3
+        board = (1, 2, 0,
+                 3, 4, 5,
+                 6, 7, 8)
+        moves = dict(neighbors(n, board))
+        # From top-right corner: can move Down or Left
+        self.assertEqual(set(moves.values()), {"D", "L"})
 
 
 class TestAStar(unittest.TestCase):
