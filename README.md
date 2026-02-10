@@ -157,7 +157,7 @@ Move sequence: LLURRULLUURRRDDRUULDDRUULDLLDLURRDRRDD
 ### Requirements
 
 * Python **3.10+** (tested with Python 3.12)
-* No external libraries required
+* No external libraries required (see `requirements.txt`)
 
 ### Run Command
 
